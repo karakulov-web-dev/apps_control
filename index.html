@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" style="height:100%;">
+  <head>
+  <script type="text/javascript">
+    (function () {
+            var height = (screen.width) > 1000 ? 720 : 480
+            document.write('<link rel="stylesheet" href="http://212.77.128.177/stalker_portal/c/template/default/blocking.css"/>');
+            document.write('<link rel="stylesheet" href="http://212.77.128.177/stalker_portal/c/template/default/blocking_'+ height +'.css"/>');
+    })();
+</script>
+    
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  </head>
+  <body>
+    <div
+      id="divpass"
+      class="outer"
+      style="height:98%; width: 100%; display:none; margin-top: 200px;"
+    >
+      <span class="inner">
+        <p id="str_head">РОДИТЕЛЬСКИЙ КОНТРОЛЬ</p>
+        <p id="str_hint">Для доступа к приложению необходимо ввести пароль:</p>
+        <p>
+          <img id="ico_wrong" /><input type="password" id="input_pass" /><br />
+          <button class="button" id="ok_button">
+            ОК
+          </button>
+          <button class="button" id="cancel_button">
+            Выход
+          </button>
+        </p></span
+      >
+    </div>
+  </body>
+  <script src="./src/index.js"></script>
+</html>
