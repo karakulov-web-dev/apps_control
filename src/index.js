@@ -1,7 +1,7 @@
 /**
  * Список resurs с родительским контролем
  */
- var PARENT_CONTROL_CONFIG = {
+var PARENT_CONTROL_CONFIG = {
   ivi: true,
   vcat: true,
   yout: true
@@ -11,34 +11,35 @@
  * Это белый список resurs для которых не нужно проверять наличие интернет соединения
  */
 var INTERNET_CONNECTION_CHECK_WHITE_LIST_CONFIG = {
-  vcat: true // видеокаталог
+  vcat: true,
+  mults: true
 };
 
 /**
  * Список соответсвия resurs c названиями приложений (путь отсносительно директории external)
  */
- var RESURS_TO_APP_NAMES = {
-   ivi: "ivi",
-   vcat: "videocatalog",
-   yout: "youtube",
-   "youtube-kids": "youtube-kids",
-   "youtube-tv": "youtube-tv",
-   "youtube-tv": "youtube-tv",
-   "twitch": "twitch",
-   "youtube-rikt": "youtube-rikt"
- }
+var RESURS_TO_APP_NAMES = {
+  ivi: "ivi",
+  vcat: "videocatalog",
+  yout: "youtube",
+  "youtube-kids": "youtube-kids",
+  "youtube-tv": "youtube-tv",
+  twitch: "twitch",
+  "youtube-rikt": "youtube-rikt",
+  mults: "mults"
+};
 
 /**
  * Список соответсвия resurs c человекочитаемыми названиями приложений
  */
- var HUMAN_READABLE_NAMES_RESURS = {
-   yout: "YouTube",
-   ivi: "IVI.RU",
-   "youtube-kids": "Youtube Детям",
-   "youtube-tv": "Youtube TV",
-   "twitch": "TWITCH",
-   "youtube-rikt": "Youtube ТЕСТ"
- }
+var HUMAN_READABLE_NAMES_RESURS = {
+  yout: "YouTube",
+  ivi: "IVI.RU",
+  "youtube-kids": "Youtube Детям",
+  "youtube-tv": "Youtube TV",
+  twitch: "TWITCH",
+  "youtube-rikt": "Youtube ТЕСТ"
+};
 
 // инициализция stb api
 var stb;
@@ -72,10 +73,10 @@ var internet_connection_check = new Internet_connection_check();
   } else {
     // иначе сразу проверяем родительский контроль
     if (typeof PARENT_CONTROL_CONFIG[resurs] !== "undefined") {
-      checkParentControl(RESURS_TO_APP_NAMES[resurs], resurs);
+      checkParentControl(resurs);
       return;
     }
-    redirectApp(RESURS_TO_APP_NAMES[resurs]); // если родитеский контроль не нужен: перенаправляем в приложение
+    redirectApp(resurs); // если родитеский контроль не нужен: перенаправляем в приложение
   }
 })();
 
@@ -83,28 +84,33 @@ var internet_connection_check = new Internet_connection_check();
 internet_connection_check.successfully = function() {
   var resurs = getUrlVars()["resurs"];
   if (typeof PARENT_CONTROL_CONFIG[resurs] !== "undefined") {
-    checkParentControl(RESURS_TO_APP_NAMES[resurs], resurs);
+    checkParentControl(resurs);
     return;
   }
-  redirectApp(RESURS_TO_APP_NAMES[resurs]);
+  redirectApp(resurs);
 };
 
 // интернета нет:
 internet_connection_check.fail = function() {
   var body = document.getElementsByTagName("body")[0];
-  var fontSize = (screen.width) > 1000 ? "" : "24px;"
+  var fontSize = screen.width > 1000 ? "" : "24px;";
   body.innerHTML =
-    '<div class="cut_off" style="display: block; height: 100%;"' + fontSize + '>' +
+    '<div class="cut_off" style="display: block; height: 100%;"' +
+    fontSize +
+    ">" +
     '<div class="cut_off_text">' +
-    (function () {
-      if (typeof HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] === 'undefined') {
-      return 'Раздел'
+    (function() {
+      if (
+        typeof HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] ===
+        "undefined"
+      ) {
+        return "Раздел";
       }
-      return '\"' + HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] + '\"'
+      return '"' + HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] + '"';
     })() +
     " не доступен на Вашем тарифе, " +
     "<br>" +
-    "для смены тарифа"+ 
+    "для смены тарифа" +
     "<br>" +
     " позвоните на 65-000." +
     '<div class="blocking_buttons"><div class="blocking_account_reboot"><div class="color_btn red"></div>' +
@@ -125,7 +131,7 @@ internet_connection_check.fail = function() {
   };
 };
 
-function checkParentControl(appName, resurs) {
+function checkParentControl(resurs) {
   var pcStatus;
   try {
     pcStatus = stb.RDir("getenv " + resurs + "pass");
@@ -133,13 +139,13 @@ function checkParentControl(appName, resurs) {
     pcStatus = 0;
   }
   if (pcStatus) {
-    parentControl(appName);
+    parentControl(resurs);
     return;
   }
-  redirectApp(appName);
+  redirectApp(resurs);
 }
 
-function parentControl(appName) {
+function parentControl(resurs) {
   var mac;
   var data;
   try {
@@ -171,7 +177,7 @@ function parentControl(appName) {
       document.getElementById("input_pass").blur();
       document.getElementById("ok_button").focus();
     } else if (event.keyCode == 13) {
-      ok_pressed(appName, data.password);
+      ok_pressed(resurs, data.password);
     } else if (event.keyCode == 27) {
       exit();
     }
@@ -187,7 +193,7 @@ function parentControl(appName) {
       document.getElementById("ok_button").blur();
       document.getElementById("cancel_button").focus();
     } else if (event.keyCode == 13) {
-      ok_pressed(appName, data.password);
+      ok_pressed(resurs, data.password);
     } else if (event.keyCode == 27) {
       exit();
     }
@@ -268,16 +274,21 @@ function getUrlVars() {
   return vars;
 }
 
-function ok_pressed(appName, password) {
+function ok_pressed(resurs, password) {
   if (document.getElementById("input_pass").value == password) {
-    redirectApp(appName);
+    redirectApp(resurs);
   } else {
     document.getElementById("input_pass").value = "";
     document.getElementById("ico_wrong").style.visibility = "visible";
   }
 }
 
-function redirectApp(appName) {
+function redirectApp(resurs) {
+  if (typeof RESURS_TO_APP_NAMES[resurs] === "undefined") {
+    location = resurs;
+    return;
+  }
+  var appName = RESURS_TO_APP_NAMES[resurs];
   l =
     "/stalker_portal/external/" +
     appName +
