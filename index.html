@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="ru" style="height:100%;">
   <head>
-  <script type="text/javascript">
-    (function () {
-            var height = (screen.width) > 1000 ? 720 : 480
-            document.write('<link rel="stylesheet" href="http://212.77.128.177/stalker_portal/c/template/default/blocking.css"/>');
-            document.write('<link rel="stylesheet" href="http://212.77.128.177/stalker_portal/c/template/default/blocking_'+ height +'.css"/>');
-    })();
-</script>
-    
+    <script type="text/javascript">
+      (function() {
+        var height = screen.width > 1000 ? 720 : 480;
+        document.write(
+          '<link rel="stylesheet" href="http://212.77.128.205/stalker_portal/c/template/default/blocking.css"/>'
+        );
+        if (height === 720) {
+          document.write(
+            '<link rel="stylesheet" href="http://212.77.128.205/stalker_portal/c/template/default/blocking_' +
+              height +
+              '.css"/>'
+          );
+        }
+      })();
+    </script>
+
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
   </head>
   <body>

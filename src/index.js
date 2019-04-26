@@ -93,26 +93,25 @@ internet_connection_check.successfully = function() {
 // интернета нет:
 internet_connection_check.fail = function() {
   var body = document.getElementsByTagName("body")[0];
-  var fontSize = screen.width > 1000 ? "" : "24px;";
+  var fontSize = screen.width > 1000 ? "" : "font-size: 24px;";
+
+  var appName = (function() {
+    if (
+      typeof HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] === "undefined"
+    ) {
+      return "Раздел";
+    }
+    return '"' + HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] + '"';
+  })();
+
   body.innerHTML =
     '<div class="cut_off" style="display: block; height: 100%;"' +
     fontSize +
     ">" +
-    '<div class="cut_off_text">' +
-    (function() {
-      if (
-        typeof HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] ===
-        "undefined"
-      ) {
-        return "Раздел";
-      }
-      return '"' + HUMAN_READABLE_NAMES_RESURS[getUrlVars()["resurs"]] + '"';
-    })() +
-    " не доступен на Вашем тарифе, " +
-    "<br>" +
-    "для смены тарифа" +
-    "<br>" +
-    " позвоните на 65-000." +
+    '<div class="cut_off_text" >' +
+    ' <div style="width: 80%; margin: 0 auto;">' +
+    appName +
+    " не доступен на Вашем тарифе, для смены тарифа позвоните на 65-000. </div>" +
     '<div class="blocking_buttons"><div class="blocking_account_reboot"><div class="color_btn red"></div>' +
     " Назад" +
     "</div></div></div>";
@@ -151,7 +150,6 @@ function parentControl(resurs) {
   try {
     mac = stb.RDir("MACAddress");
   } catch (e) {
-    mac = "00:1A:79:1A:87:FA";
     console.log(e);
   }
   var xhr = new XMLHttpRequest();
@@ -285,11 +283,26 @@ function ok_pressed(resurs, password) {
 
 function redirectApp(resurs) {
   if (typeof RESURS_TO_APP_NAMES[resurs] === "undefined") {
-    location = resurs;
+    var ajax_loader = getUrlVars()["ajax_loader"];
+    var token = getUrlVars()["token"];
+    var timeout = getUrlVars()["timeout"];
+
+    ajax_loader = ajax_loader ? "&ajax_loader=" + ajax_loader : "";
+    token = token ? "&token=" + token : "";
+    timeout = timeout ? "&timeout=" + timeout : "";
+
+    var url =
+      decodeURIComponent(resurs) +
+      "?referrer=/stalker_portal/c/index.html" +
+      ajax_loader +
+      token +
+      timeout;
+
+    location = url;
     return;
   }
   var appName = RESURS_TO_APP_NAMES[resurs];
-  l =
+  var l =
     "/stalker_portal/external/" +
     appName +
     "/index.html?referrer=%2Fstalker_portal%2Fc%2Findex.html&ajax_loader=" +
