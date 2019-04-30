@@ -137,6 +137,9 @@ function checkParentControl(resurs) {
   } catch (e) {
     pcStatus = 0;
   }
+  if (typeof pcStatus === "string") {
+    pcStatus = Boolean(Number(pcStatus));
+  }
   if (pcStatus) {
     parentControl(resurs);
     return;
