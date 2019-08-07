@@ -30,6 +30,13 @@ var RESURS_TO_APP_NAMES = {
 };
 
 /**
+ * Список соответсвия resurs c названиями приложений (родные приложения твип)
+ */
+var RESURS_TO_APP_NAMES_NATIVE_TVIP = {
+  yout: "youtube"
+};
+
+/**
  * Список соответсвия resurs c человекочитаемыми названиями приложений
  */
 var HUMAN_READABLE_NAMES_RESURS = {
@@ -285,6 +292,15 @@ function ok_pressed(resurs, password) {
 }
 
 function redirectApp(resurs) {
+  var mac = gSTB.RDir("MACAddress");
+  if (
+    mac.substring(0, 8) == "10:27:BE" &&
+    RESURS_TO_APP_NAMES_NATIVE_TVIP[resurs]
+  ) {
+    TvipStb.execSystemUri(RESURS_TO_APP_NAMES_NATIVE_TVIP[resurs]);
+    return;
+  }
+
   if (typeof RESURS_TO_APP_NAMES[resurs] === "undefined") {
     var ajax_loader = getUrlVars()["ajax_loader"];
     var token = getUrlVars()["token"];
