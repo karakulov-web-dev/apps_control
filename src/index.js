@@ -324,7 +324,7 @@ function redirectApp(resurs) {
   var l =
     "/stalker_portal/external/" +
     appName +
-    "/index.html?referrer=%2Fstalker_portal%2Fc%2Findex.html&ajax_loader=" +
+    "/index.html?referrer=/stalker_portal/c/index.html&ajax_loader=" +
     getUrlVars()["ajax_loader"] +
     "&token=" +
     getUrlVars()["token"] +
