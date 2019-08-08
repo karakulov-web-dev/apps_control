@@ -33,7 +33,9 @@ var RESURS_TO_APP_NAMES = {
  * Список соответсвия resurs c названиями приложений (родные приложения твип)
  */
 var RESURS_TO_APP_NAMES_NATIVE_TVIP = {
-  yout: "youtube"
+  "youtube-rikt": "youtube",
+  "youtube-kids": "youtube_kids"
+  	
 };
 
 /**
